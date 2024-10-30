@@ -1,15 +1,13 @@
-// components/Layout.js
-import Sidebar from './Sidebar';
+// src/components/layout.js
+import React from 'react';
 
-export default function Layout({ children }) {
+/**
+ * @param {{ children: React.ReactNode, home?: boolean }} props
+ */
+export default function Layout({ children, home }) {
     return (
-        <div className="container">
-            <div className="mainContainer flex">
-                <aside className="w-64 bg-ctp-surface p-4">
-                    <Sidebar />
-                </aside>
-                <main className="main-content flex-1">{children}</main>
-            </div>
+        <div className={`layout ${home ? 'home' : ''}`}>
+            {children}
         </div>
     );
 }

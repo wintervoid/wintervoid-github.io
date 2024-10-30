@@ -1,38 +1,48 @@
-// pages/posts/[id].tsx
-import Layout from '../../components/layout';
-import { getAllPostIds, getPostData } from '../../lib/posts';
+// src/pages/posts/[id].tsx
+import React from 'react';
 import Head from 'next/head';
+import Layout from '../../components/layout.js';
 import { GetStaticPaths, GetStaticProps } from 'next';
+import { getAllPostIds, getPostData } from '../../lib/posts';
 
-export default function Post({ postData }) {
+const LayoutWithProps: React.FC<{ children: React.ReactNode, home?: boolean }> = Layout;
+
+interface PostProps {
+    postData: {
+        title: string;
+        contentHtml: string;
+    };
+}
+
+const Post: React.FC<PostProps> = ({ postData }) => {
     return (
-        <Layout home={false}>
+        <LayoutWithProps home={false}>
             <Head>
                 <title>{postData.title}</title>
             </Head>
             <article>
                 <h1>{postData.title}</h1>
-                <p>{postData.date}</p>
                 <div dangerouslySetInnerHTML={{ __html: postData.contentHtml }} />
             </article>
-        </Layout>
+        </LayoutWithProps>
     );
-}
-
-export const getStaticPaths: GetStaticPaths = async () => {
-    const paths = getAllPostIds(); // Get all possible post IDs
-    console.log('Generated paths:', paths); // Debugging: check generated paths
-    return {
-        paths,
-        fallback: false, // Only generate paths for existing posts
-    };
 };
 
+export default Post;
+
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-    const postData = getPostData(params?.id as string);
+    const postData = await getPostData(params.id as string);
     return {
         props: {
             postData,
         },
+    };
+};
+
+export const getStaticPaths: GetStaticPaths = async () => {
+    const paths = getAllPostIds();
+    return {
+        paths,
+        fallback: false,
     };
 };

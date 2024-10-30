@@ -1,14 +1,20 @@
 {
-  "private": true,
+  "name": "shitty-webpage",
+  "version": "1.0.0",
+  "private": false,
   "scripts": {
-    "build": "next build",
     "dev": "next dev",
-    "start": "next start"
+    "build": "next build",
+    "start": "next start",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d out"
   },
   "dependencies": {
     "@catppuccin/palette": "^1.5.0",
     "autoprefixer": "^10.4.20",
     "fs": "^0.0.1-security",
+    "gh": "^2.8.9",
+    "gh-pages": "^6.2.0",
     "gray-matter": "^4.0.3",
     "next": "latest",
     "path": "^0.12.7",
