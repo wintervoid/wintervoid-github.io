@@ -1,57 +1,38 @@
-import { useRouter } from 'next/router';
+// pages/posts/[id].tsx
 import Layout from '../../components/layout';
-import { getSortedPostsData } from '../../lib/posts';
-import matter from 'gray-matter';
-import fs from 'fs';
-import path from 'path';
-import { remark } from 'remark';
-import html from 'remark-html';
+import { getAllPostIds, getPostData } from '../../lib/posts';
+import Head from 'next/head';
+import { GetStaticPaths, GetStaticProps } from 'next';
 
-const Post = ({ postData }) => {
+export default function Post({ postData }) {
     return (
-        <Layout home={true}>
-            <h1>{postData.title}</h1>
-            <p>{postData.date}</p>
-            <div dangerouslySetInnerHTML={{ __html: postData.contentHtml }} />
+        <Layout home={false}>
+            <Head>
+                <title>{postData.title}</title>
+            </Head>
+            <article>
+                <h1>{postData.title}</h1>
+                <p>{postData.date}</p>
+                <div dangerouslySetInnerHTML={{ __html: postData.contentHtml }} />
+            </article>
         </Layout>
     );
+}
+
+export const getStaticPaths: GetStaticPaths = async () => {
+    const paths = getAllPostIds(); // Get all possible post IDs
+    console.log('Generated paths:', paths); // Debugging: check generated paths
+    return {
+        paths,
+        fallback: false, // Only generate paths for existing posts
+    };
 };
 
-export async function getStaticPaths() {
-    // Get all posts data
-    const posts = getSortedPostsData();
-
-    // Create paths for each post based on the file names
-    const paths = posts.map((post) => ({
-        params: { id: post.id }, // The id corresponds to the file name (without .md)
-    }));
-
-    return { paths, fallback: false }; // Set to false for a static build
-}
-
-export async function getStaticProps({ params }) {
-    const { id } = params;
-
-    // Read the markdown file based on the id
-    const fullPath = path.join(process.cwd(), 'posts', `${id}.md`);
-    const fileContents = fs.readFileSync(fullPath, 'utf8');
-
-    // Use gray-matter to parse the post metadata section
-    const matterResult = matter(fileContents);
-
-    // Convert markdown content to HTML
-    const processedContent = await remark().use(html).process(matterResult.content);
-    const contentHtml = processedContent.toString();
-
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+    const postData = getPostData(params?.id as string);
     return {
         props: {
-            postData: {
-                id,
-                contentHtml,
-                ...matterResult.data,
-            },
+            postData,
         },
     };
-}
-
-export default Post;
+};

@@ -1,0 +1,28 @@
+/* components/layout.module.css */
+
+.container {
+    display: flex; /* Flexbox for layout */
+    flex-direction: column; /* Vertical layout for the entire layout */
+    min-height: 100vh; /* Full height */
+}
+
+.header {
+    padding: 1rem; /* Header padding */
+}
+
+.mainContainer {
+    display: flex; /* Horizontal layout for main content and sidebar */
+    flex: 1; /* Take up remaining space */
+}
+
+.sidebar {
+    @apply bg-ctp-mantle text-ctp-text shadow-lg p-4 h-full w-64; /* Styles for sidebar */
+}
+
+.main-content {
+    @apply flex-1 p-4; /* Padding for main content area */
+}
+
+.backToHome {
+    margin-top: 20px; /* Space above the back link */
+}
