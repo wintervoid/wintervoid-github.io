@@ -8,12 +8,17 @@ export default function Sidebar() {
             <ul>
                 <li className="mb-2">
                     <Link href="/" className="text-ctp-text hover:underline">
-                        Home
+                        ~/Home/
                     </Link>
                 </li>
                 <li className="mb-2">
                     <Link href="/blog" className="text-ctp-text hover:underline">
-                        Blog
+                        ~/Blog/
+                    </Link>
+                </li>
+                <li className="mb-2">
+                    <Link href="/projects" className="text-ctp-text hover:underline">
+                        ~/github contributions/
                     </Link>
                 </li>
             </ul>
